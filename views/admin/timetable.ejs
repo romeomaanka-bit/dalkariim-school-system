@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="so">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #f4f6f9; display: flex; height: 100vh; overflow: hidden; }
+        
+        .sidebar { width: 260px; background-color: #1e293b; color: #fff; display: flex; flex-direction: column; }
+        .sidebar-header { padding: 20px; background-color: #0f172a; text-align: center; }
+        .sidebar-header h2 { font-size: 22px; color: #38bdf8; }
+        .sidebar-menu { list-style: none; padding: 20px 0; flex-grow: 1; }
+        .sidebar-menu li a { display: block; padding: 12px 20px; color: #94a3b8; text-decoration: none; font-size: 15px; transition: 0.3s; }
+        .sidebar-menu li a:hover, .sidebar-menu li a.active { background-color: #334155; color: #fff; border-left: 4px solid #38bdf8; }
+        .sidebar-menu li a i { margin-right: 10px; }
+
+        .main-content { flex-grow: 1; display: flex; flex-direction: column; overflow-y: auto; }
+        header { background-color: #fff; padding: 15px 30px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; }
+        header h1 { font-size: 20px; color: #1e293b; }
+
+        .page-body { padding: 30px; }
+        .content-card { background: #fff; padding: 25px; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); margin-bottom: 25px; }
+        .content-card h2 { font-size: 18px; color: #1e293b; margin-bottom: 15px; }
+
+        form { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px; }
+        form input, form select { padding: 10px; border: 1px solid #cbd5e1; border-radius: 5px; font-size: 14px; }
+        form button { background-color: #3b82f6; color: white; border: none; padding: 10px; border-radius: 5px; cursor: pointer; font-weight: 600; grid-column: span full; }
+        
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #e2e8f0; font-size: 14px; }
+        th { background-color: #f8fafc; color: #475569; }
+
+        .btn-edit { background-color: #3b82f6; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; text-decoration: none; font-size: 13px; }
+        .btn-delete { background-color: #ef4444; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 13px; }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h2>Dalkariim School</h2>
+        </div>
+        <ul class="sidebar-menu">
+            <li><a href="/admin/dashboard"><i class="fa fa-home"></i> Dashboard</a></li>
+            <li><a href="/admin/students"><i class="fa fa-user-graduate"></i> Ardayda</a></li>
+            <li><a href="/admin/teachers"><i class="fa fa-chalkboard-teacher"></i> Macallimiinta</a></li>
+            <li><a href="/admin/fees"><i class="fa fa-money-bill-wave"></i> Lacagaha (Fees)</a></li>
+            <li><a href="/admin/attendance"><i class="fa fa-calendar-check"></i> Xadirinta</a></li>
+            <li><a href="/admin/timetable" class="active"><i class="fa fa-calendar-alt"></i> Jadawalka</a></li>
+            <li><a href="/login"><i class="fa fa-sign-out-alt"></i> Ka bax (Logout)</a></li>
+        </ul>
+    </div>
+
+    <div class="main-content">
+        <header>
+            <h1>Maamulka Dugsiga Dalkariim</h1>
+            <span>Admin</span>
+        </header>
+
+        <div class="page-body">
+            <!-- Foomka lagu darayo Jadawalka oo ka soo jiidanaya Macallimiinta -->
+            <div class="content-card">
+                <h2>Ku Dar Jadawalka Cusub</h2>
+                <form action="/admin/timetable" method="POST">
+                    <input type="text" name="day" placeholder="Maalinta (Tusaale: Sabti)" required>
+                    <input type="text" name="time" placeholder="Waqtiga (Tusaale: 08:00 AM)" required>
+                    <input type="text" name="subject" placeholder="Magaca Maaddada" required>
+                    
+                    <!-- Macallimiinta oo si toos ah uga imanaya Database-ka macallimiinta -->
+                    <select name="teacher" required>
+                        <option value="">Dooro Macallinka</option>
+                        <% teachers.forEach(teacher => { %>
+                            <option value="<%= teacher.name %> (<%= teacher.subject %>)"><%= teacher.name %> - <%= teacher.subject %></option>
+                        <% }) %>
+                    </select>
+
+                    <input type="text" name="classRoom" placeholder="Fasalka (Tusaale: Fasalka 4aad)" required>
+                    <button type="submit">Kaydi Jadawalka</button>
+                </form>
+            </div>
+
+            <!-- Miiska Jadawalka iyo Badhamada Edit / Delete -->
+            <div class="content-card">
+                <h2>Liiska Jadawalka Maadooyinka</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Maalinta</th>
+                            <th>Saacadda</th>
+                            <th>Maaddada</th>
+                            <th>Macallinka & Maaddadiisa</th>
+                            <th>Fasalka</th>
+                            <th>Wax ka beddel / Tirtir</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% timetables.forEach(item => { %>
+                            <tr>
+                                <td><%= item.day %></td>
+                                <td><%= item.time %></td>
+                                <td><%= item.subject %></td>
+                                <td><%= item.teacher %></td>
+                                <td><%= item.classRoom %></td>
+                                <td>
+                                    <a href="/admin/timetable/edit/<%= item._id %>" class="btn-edit">Baddel</a>
+                                    <form action="/admin/timetable/delete/<%= item._id %>" method="POST" style="display:inline; margin-left: 5px;">
+                                        <button type="submit" class="btn-delete" onclick="return confirm('Ma hubtaa inaad tirtirto jadawalkan?')">Tirtir</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

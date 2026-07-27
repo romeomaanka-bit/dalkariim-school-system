@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="so">
+<head>
+    <meta charset="UTF-8">
+    <title><%= title %></title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Poppins', sans-serif; background-color: #f1f5f9; margin: 0; padding: 20px; }
+        .container { max-width: 900px; margin: 0 auto; background: white; padding: 30px; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
+        h1, h2 { color: #1e293b; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; font-weight: 600; font-size: 13px; margin-bottom: 5px; color: #475569; }
+        input, select, button { padding: 12px; border-radius: 8px; border: 1px solid #cbd5e1; font-size: 14px; width: 100%; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        button { background-color: #0284c7; color: white; border: none; font-weight: 600; cursor: pointer; margin-top: 5px; }
+        button:hover { background-color: #0369a1; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #cbd5e1; padding: 10px; text-align: left; font-size: 14px; }
+        th { background-color: #f1f5f9; color: #475569; }
+        .delete-btn { background: #ef4444; padding: 6px 12px; width: auto; font-size: 12px; }
+        .delete-btn:hover { background: #dc2626; }
+        .back-link { display: inline-block; margin-bottom: 20px; color: #0284c7; text-decoration: none; font-weight: 600; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/admin/dashboard" class="back-link">&larr; Ku noqo Dashboard-ka</a>
+        <h1>Maamulka Maadooyinka</h1>
+
+        <form action="/admin/subjects" method="POST">
+            <div class="form-group">
+                <label>Magaca Maadada:</label>
+                <input type="text" name="name" required placeholder="Tusaale: Xisaab">
+            </div>
+            <div class="form-group">
+                <label>Fasalka:</label>
+                <select name="classRoom" required>
+                    <% classes.forEach(c => { %>
+                        <option value="<%= c.className %>"><%= c.className %></option>
+                    <% }) %>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Macallinka Dhigta:</label>
+                <select name="teacher" required>
+                    <% teachers.forEach(t => { %>
+                        <option value="<%= t.name %>"><%= t.name %></option>
+                    <% }) %>
+                </select>
+            </div>
+            <button type="submit">Diiwaangeli Maadada</button>
+        </form>
+
+        <h2 style="margin-top: 40px;">Liiska Maadooyinka</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Magaca Maadada</th>
+                    <th>Fasalka</th>
+                    <th>Macallinka</th>
+                    <th>Tallaabo</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% subjects.forEach(s => { %>
+                    <tr>
+                        <td><%= s.name %></td>
+                        <td><%= s.classRoom %></td>
+                        <td><%= s.teacher %></td>
+                        <td style="display: flex; gap: 5px;">
+                            <a href="/admin/subjects/edit/<%= s._id %>" style="background: #0284c7; color: white; padding: 6px 12px; border-radius: 6px; text-decoration: none; font-size: 12px; font-weight: 600;">Wax ka beddel</a>
+                            <form action="/admin/subjects/delete/<%= s._id %>" method="POST" style="margin:0;">
+                                <button type="submit" class="delete-btn">Tirtir</button>
+                            </form>
+                        </td>
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="so">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Poppins', sans-serif; background-color: #f1f5f9; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .login-card { background: white; padding: 40px; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); width: 100%; max-width: 400px; box-sizing: border-box; }
+        h2 { text-align: center; color: #1e293b; margin-bottom: 25px; font-weight: 700; }
+        .tabs { display: flex; margin-bottom: 25px; border-bottom: 2px solid #e2e8f0; }
+        .tab { flex: 1; text-align: center; padding: 10px; cursor: pointer; font-weight: 600; color: #64748b; text-decoration: none; }
+        .tab.active { color: #0284c7; border-bottom: 2px solid #0284c7; margin-bottom: -2px; }
+        .form-group { margin-bottom: 20px; display: flex; flex-direction: column; gap: 6px; }
+        label { font-size: 13px; font-weight: 600; color: #475569; }
+        input { padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; font-family: 'Poppins', sans-serif; }
+        button { width: 100%; background-color: #0284c7; color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 15px; margin-top: 10px; }
+        button:hover { background-color: #0369a1; }
+        .error-msg { background-color: #fee2e2; color: #b91c1c; padding: 10px; border-radius: 8px; font-size: 13px; margin-bottom: 20px; text-align: center; }
+        .form-container { display: none; }
+        .form-container.active { display: block; }
+        .links { text-align: center; margin-top: 20px; font-size: 13px; }
+        .links a { color: #0284c7; text-decoration: none; }
+        .links a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+
+    <div class="login-card">
+        <h2>Dalkariim School</h2>
+
+        <% if (error) { %>
+            <div class="error-msg"><%= error %></div>
+        <% } %>
+
+        <!-- Tabs-ka u dhexeeya Maamulaha iyo Macallinka -->
+        <div class="tabs">
+            <a href="#" class="tab active" onclick="switchTab(event, 'admin-form')">Maamule (Admin)</a>
+            <a href="#" class="tab" onclick="switchTab(event, 'teacher-form')">Macallin (Teacher)</a>
+        </div>
+
+        <!-- Foomka Maamulaha -->
+        <div id="admin-form" class="form-container active">
+            <form action="/login/admin" method="POST">
+                <div class="form-group">
+                    <label>Username-ka Maamulaha:</label>
+                    <input type="text" name="username" placeholder="Geli username-ka" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Password-ka:</label>
+                    <input type="password" name="password" placeholder="Geli password-ka" required>
+                </div>
+
+                <button type="submit">Gali Dashboard-ka Maamulaha</button>
+            </form>
+        </div>
+
+        <!-- Foomka Macallinka (oo hadda wata Username iyo Password) -->
+        <div id="teacher-form" class="form-container">
+            <form action="/login/teacher" method="POST">
+                <div class="form-group">
+                    <label>Username-ka Macallinka:</label>
+                    <input type="text" name="username" placeholder="Geli username-kaaga" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Password-ka:</label>
+                    <input type="password" name="password" placeholder="Geli password-ka" required>
+                </div>
+
+                <button type="submit">Gali Dashboard-ka Macallinka</button>
+            </form>
+        </div>
+
+        <div class="links">
+            <a href="/forgot-credentials">Ma ilowday Username ama Password?</a> | 
+            <a href="/register">Isdiiwaangeli</a>
+        </div>
+    </div>
+
+    <script>
+        function switchTab(evt, formId) {
+            evt.preventDefault();
+            
+            // Ka saar fasalka 'active' dhammaan tab-yada iyo foomamka
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.form-container').forEach(form => form.classList.remove('active'));
+            
+            // Ku dar 'active' tab-kii la riixay iyo foomkii u dhigma
+            evt.currentTarget.classList.add('active');
+            document.getElementById(formId).classList.add('active');
+        }
+    </script>
+
+</body>
+</html>

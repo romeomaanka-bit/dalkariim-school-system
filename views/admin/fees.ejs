@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="so">
+<head>
+    <meta charset="UTF-8">
+    <title><%= title %></title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 font-sans p-8">
+    <div class="max-w-4xl mx-auto bg-white p-8 rounded-xl shadow-md">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-bold text-gray-800">Maamulka Lacagaha</h2>
+            <a href="/admin/dashboard" class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600">Dashboard</a>
+        </div>
+
+        <!-- Foomka lagu darayo Lacag cusub -->
+        <form action="/admin/fees" method="POST" class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8 bg-gray-50 p-4 rounded-lg">
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Magaca Ardayga</label>
+                <input type="text" name="studentName" required class="w-full p-2 border rounded-lg mt-1">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Lacagta (Amount)</label>
+                <input type="number" name="amount" required class="w-full p-2 border rounded-lg mt-1">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Bisha / Taariikhda</label>
+                <input type="text" name="month" required class="w-full p-2 border rounded-lg mt-1">
+            </div>
+            <div class="md:col-span-3">
+                <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded-lg font-semibold hover:bg-blue-700">Diiwaangeli Lacagta</button>
+            </div>
+        </form>
+
+        <!-- Liiska Lacagaha -->
+        <table class="w-full border-collapse">
+            <thead>
+                <tr class="bg-gray-200 text-left">
+                    <th class="p-3">Magaca Ardayga</th>
+                    <th class="p-3">Lacagta</th>
+                    <th class="p-3">Bisha</th>
+                    <th class="p-3">Wax ka beddel / Tirtir</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% fees.forEach(fee => { %>
+                    <tr class="border-b">
+                        <td class="p-3"><%= fee.studentName %></td>
+                        <td class="p-3">$<%= fee.amount %></td>
+                        <td class="p-3"><%= fee.month %></td>
+                        <td class="p-3 space-x-2">
+                            <a href="/admin/fees/edit/<%= fee._id %>" class="text-blue-600 hover:underline">Wax ka beddel</a>
+                            <form action="/admin/fees/delete/<%= fee._id %>" method="POST" style="display:inline;">
+                                <button type="submit" class="text-red-600 hover:text-red-900">Tirtir</button>
+                            </form>
+                        </td>
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

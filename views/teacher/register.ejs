@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="so">
+<head>
+    <meta charset="UTF-8">
+    <title><%= title %></title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+    <div class="bg-white p-8 rounded-xl shadow-md w-full max-w-md">
+        <h2 class="text-2xl font-bold text-center text-blue-600 mb-6">👩‍🏫 Is-diiwaangelinta Macallinka</h2>
+        <form action="/teacher/register" method="POST" class="space-y-4">
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Magaca oo buuxa</label>
+                <input type="text" name="name" required class="w-full p-2 border rounded-lg mt-1">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Maaddada uu dhigayo</label>
+                <input type="text" name="subject" required class="w-full p-2 border rounded-lg mt-1">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Lambarka Telofonka</label>
+                <input type="text" name="phone" required class="w-full p-2 border rounded-lg mt-1">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Erayga Sirta ah (Password)</label>
+                <input type="password" name="password" required class="w-full p-2 border rounded-lg mt-1">
+            </div>
+            <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded-lg font-semibold hover:bg-blue-700">Is-diiwaangeli</button>
+        </form>
+        <div class="mt-4 text-center">
+            <a href="/teacher/login" class="text-sm text-blue-500 hover:underline">Haddii aad leedahay Account, soo gal (Login)</a>
+        </div>
+    </div>
+</body>
+</html>
