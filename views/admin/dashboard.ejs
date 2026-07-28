@@ -115,8 +115,9 @@
                             <label class="form-label">Fasalka / Maadada</label>
                             <select name="classRoom" class="form-select" required>
                                 <option value="">Dooro Maadada/Fasalka</option>
-                                <% subjects.forEach(sub => { %>
-                                    <option value="<%= sub.name %>"><%= sub.name %> (<%= sub.classRoom %>)</option>
+                                <% classes.forEach(c => { %>
+                                    <% let val = typeof c === 'string' ? c : (c.name || c.className || c.title || c._id); %>
+                                    <option value="<%= val %>"><%= val %></option>
                                 <% }) %>
                             </select>
                         </div>

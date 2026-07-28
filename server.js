@@ -159,7 +159,17 @@ app.get('/admin/dashboard', async (req, res) => {
         const classesCount = await ClassRoom.countDocuments();
         
         const students = await Student.find({});
-        const classes = await ClassRoom.find({});
+        
+        // Soo qaado fasalada database-ka, haddii ay ka madhan yihiin isticmaal kuwo tusaale ah
+        let classes = await ClassRoom.find({});
+        if (!classes || classes.length === 0) {
+            classes = [
+                { name: 'Fasalka 1aad (Form 1)' },
+                { name: 'Fasalka 2aad (Form 2)' },
+                { name: 'Fasalka 3aad (Form 3)' },
+                { name: 'Fasalka 4aad (Form 4)' }
+            ];
+        }
 
         // Xisaabi taariikhda iyadoo la eegayo filtarka badhanka
         let dateFilter = {};
@@ -192,7 +202,7 @@ app.get('/admin/dashboard', async (req, res) => {
             const cleanName = teacherName.trim();
             const teacherRegex = new RegExp(`^${cleanName}$`, 'i');
             timetables = await Timetable.find({ teacher: teacherRegex });
-            subjects = await Subject.find({ teacher: teacherRegex });
+            subjects = await Subject.find({});
         } else {
             timetables = await Timetable.find({});
             subjects = await Subject.find({});
@@ -212,7 +222,7 @@ app.get('/admin/dashboard', async (req, res) => {
             subjects,
             students,
             classes,
-            currentFilter: filter // Ku dar tan si badhanka u shaqeeyo
+            currentFilter: filter
         }); 
     } catch (err) {
         console.error(err);
