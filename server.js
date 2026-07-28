@@ -1,6 +1,9 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
+require('dotenv').config();
+
+const app = express();
 
 const Fee = require('./models/Fee');
 const Teacher = require('./models/Teacher');
@@ -11,28 +14,43 @@ const ClassRoom = require('./models/ClassRoom');
 const Admin = require('./models/Admin');
 const Subject = require('./models/Subject');
 
-const app = express();
 const PORT = process.env.PORT || 3000;
+const MONGO_URI = process.env.MONGO_URI;
 
-mongoose.connect('mongodb+srv://kamaalfaruuq_db_user:PASSWORD-KAAGA_Halkan_Geli@cluster0.alyql92.mongodb.net/dalkariim_school?retryWrites=true&w=majority')
-.then(async () => {
-    console.log('MongoDB Atlas waxaa lagu guuleystay in lagu xiro!');
-    const adminExists = await Admin.findOne();
-    if (!adminExists) {
-        await Admin.create({ username: 'dalkariim', password: '12345' });
-    }
-})
-.catch(err => console.error('Khalad ayaa ka dhacay ku xiridda MongoDB:', err));
-
+// Middleware-ka asaasiga ah
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.get('/', (req, res) => {
-    res.redirect('/register');
-});
+// Ku xirnaanshaha Database-ka iyo bilaabidda Server-ka
+async function startServer() {
+    try {
+        await mongoose.connect(process.env.MONGO_URI);
+
+        console.log("✅ MongoDB Connected");
+
+        const adminExists = await Admin.findOne();
+
+        if (!adminExists) {
+            await Admin.create({
+                username: "dalkariim",
+                password: "12345"
+            });
+        }
+
+        app.listen(PORT, () => {
+            console.log(`Server running on port ${PORT}`);
+        });
+
+    } catch (err) {
+        console.error("❌ MongoDB Error:");
+        console.error(err);
+    }
+}
+
+startServer();
 
 // --- REGISTER ---
 app.get('/register', (req, res) => {
@@ -603,8 +621,4 @@ app.post('/admin/attendance/update/:id', async (req, res) => {
         console.error(err);
         res.status(500).send('Server Error');
     }
-});
-
-app.listen(PORT, () => {
-    console.log(`Serverku wuu shaqaynayaa http://localhost:${PORT}`);
 });
