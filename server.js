@@ -25,32 +25,26 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Ku xirnaanshaha Database-ka iyo bilaabidda Server-ka
-async function startServer() {
-    try {
-        await mongoose.connect(process.env.MONGO_URI);
-
-        console.log("✅ MongoDB Connected");
-
-        const adminExists = await Admin.findOne();
-
-        if (!adminExists) {
-            await Admin.create({
-                username: "dalkariim",
-                password: "12345"
-            });
-        }
-
-        app.listen(PORT, () => {
-            console.log(`Server running on port ${PORT}`);
-        });
-
-    } catch (err) {
-        console.error("❌ MongoDB Error:");
-        console.error(err);
+mongoose.connect(MONGO_URI, {
+    serverSelectionTimeoutMS: 30000,
+    family: 4
+})
+.then(async () => {
+    console.log('MongoDB Atlas waxaa lagu guuleystay in lagu xiro!');
+    const adminExists = await Admin.findOne();
+    if (!adminExists) {
+        await Admin.create({ username: 'dalkariim', password: '12345' });
     }
-}
 
-startServer();
+    app.listen(PORT, () => {
+        console.log(`Server-ku wuu shaqaynayaa http://localhost:${PORT}`);
+    });
+})
+.catch(err => console.error('Khalad ayaa ka dhacay ku xiridda MongoDB:', err));
+
+app.get('/', (req, res) => {
+    res.redirect('/register');
+});
 
 // --- REGISTER ---
 app.get('/register', (req, res) => {
@@ -157,6 +151,7 @@ app.post('/forgot-credentials', async (req, res) => {
 app.get('/admin/dashboard', async (req, res) => {
     try {
         const teacherName = req.query.teacherName || null;
+        const filter = req.query.filter || null; // Akhriso filtarka la doortay
         
         const studentsCount = await Student.countDocuments();
         const teachersCount = await Teacher.countDocuments();
@@ -166,21 +161,44 @@ app.get('/admin/dashboard', async (req, res) => {
         const students = await Student.find({});
         const classes = await ClassRoom.find({});
 
+        // Xisaabi taariikhda iyadoo la eegayo filtarka badhanka
+        let dateFilter = {};
+        if (filter === 'week') {
+            const lastWeek = new Date();
+            lastWeek.setDate(lastWeek.getDate() - 7);
+            dateFilter = { $gte: lastWeek };
+        } else if (filter === 'month') {
+            const lastMonth = new Date();
+            lastMonth.setMonth(lastMonth.getMonth() - 1);
+            dateFilter = { $gte: lastMonth };
+        }
+
         let timetables = [];
         let attendances = [];
         let subjects = [];
+
+        // Samee query-ga xadirinta adoo ku xiraya taariikhda haddii la doortay filtarka
+        let attendanceQuery = {};
+        if (teacherName) {
+            const cleanName = teacherName.trim();
+            const teacherRegex = new RegExp(`^${cleanName}$`, 'i');
+            attendanceQuery.teacher = teacherRegex;
+        }
+        if (filter) {
+            attendanceQuery.date = dateFilter;
+        }
 
         if (teacherName) {
             const cleanName = teacherName.trim();
             const teacherRegex = new RegExp(`^${cleanName}$`, 'i');
             timetables = await Timetable.find({ teacher: teacherRegex });
-            attendances = await Attendance.find({ teacher: teacherRegex }).sort({ _id: -1 });
             subjects = await Subject.find({ teacher: teacherRegex });
         } else {
             timetables = await Timetable.find({});
-            attendances = await Attendance.find({}).sort({ _id: -1 });
             subjects = await Subject.find({});
         }
+
+        attendances = await Attendance.find(attendanceQuery).sort({ date: -1 });
 
         res.render('admin/dashboard', { 
             title: 'Dashboard-ka Nidaamka',
@@ -193,7 +211,8 @@ app.get('/admin/dashboard', async (req, res) => {
             attendances,
             subjects,
             students,
-            classes
+            classes,
+            currentFilter: filter // Ku dar tan si badhanka u shaqeeyo
         }); 
     } catch (err) {
         console.error(err);

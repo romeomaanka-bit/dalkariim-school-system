@@ -2,174 +2,201 @@
 <html lang="so">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%= title %></title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Poppins', sans-serif; background-color: #f1f5f9; margin: 0; padding: 20px; }
-        .container { max-width: 1100px; margin: 0 auto; background: white; padding: 30px; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
-        h1, h2 { color: #1e293b; }
-        .welcome-banner { background-color: #e0f2fe; color: #0369a1; padding: 15px 20px; border-radius: 10px; font-weight: 600; margin-bottom: 25px; font-size: 16px; display: flex; justify-content: space-between; align-items: center; }
-        .admin-nav { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 30px; }
-        .admin-nav a { background-color: #0284c7; color: white; padding: 10px 18px; border-radius: 8px; text-decoration: none; font-weight: 500; font-size: 14px; transition: background 0.2s; }
-        .admin-nav a:hover { background-color: #0369a1; }
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 35px; }
-        .stat-card { background: #f8fafc; border: 1px solid #e2e8f0; padding: 20px; border-radius: 12px; text-align: center; }
-        .stat-card h3 { margin: 0 0 10px 0; font-size: 14px; color: #64748b; }
-        .stat-card p { margin: 0; font-size: 24px; font-weight: 700; color: #0f172a; }
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-        th, td { border: 1px solid #cbd5e1; padding: 10px; text-align: left; font-size: 14px; }
-        th { background-color: #f1f5f9; color: #475569; }
-        .section-box { margin-bottom: 40px; }
-        .attendance-form { background: #f8fafc; padding: 20px; border-radius: 12px; border: 1px solid #e2e8f0; margin-top: 15px; }
-        .form-group { margin-bottom: 12px; }
-        label { display: block; font-weight: 600; font-size: 13px; margin-bottom: 5px; color: #475569; }
-        select, button { padding: 10px; border-radius: 8px; border: 1px solid #cbd5e1; font-size: 14px; width: 100%; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-        button { background-color: #10b981; color: white; border: none; font-weight: 600; cursor: pointer; margin-top: 5px; }
-        button:hover { background-color: #059669; }
-    </style>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
-<body>
-    <div class="container">
-        <div class="welcome-banner">
-            <span>
-                <% if (teacherName) { %>
-                    Soo dhawoow, Macallin: <%= teacherName %>
-                <% } else { %>
-                    Soo dhawoow, Maamule (Admin)
-                <% } %>
-            </span>
-            <a href="/login" style="background-color: #ef4444; color: white; padding: 8px 15px; border-radius: 6px; text-decoration: none; font-size: 13px;">Ka Bax (Logout)</a>
+<body class="bg-light">
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Dalkariim School</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <% if (teacherName) { %>
+                        <li class="nav-item">
+                            <span class="nav-link text-warning"><i class="fas fa-chalkboard-teacher"></i> Macallin: <%= teacherName %></span>
+                        </li>
+                    <% } else { %>
+                        <li class="nav-item"><a class="nav-link" href="/admin/classes">Fasalada</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/admin/students">Ardayda</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/admin/teachers">Macallimiinta</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/admin/fees">Lacagaha</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/admin/timetable">Jadwalka</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/admin/subjects">Maadooyinka</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/admin/attendance">Xadirinta</a></li>
+                    <% } %>
+                    <li class="nav-item"><a class="nav-link text-danger" href="/login"><i class="fas fa-sign-out-alt"></i> Ka bax</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="container my-4">
+        
+        <!-- Welcome / Header Section -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="p-4 bg-white rounded shadow-sm border">
+                    <h2 class="text-primary mb-1">Ku soo dhowow Dashboard-ka</h2>
+                    <p class="text-muted mb-0"><%= teacherName ? 'Bogga maamulka macallinka ee xadirinta iyo jadwalka.' : 'Halkan waxaad ka maamuli kartaa guud ahaan nidaamka dugsiga.' %></p>
+                </div>
+            </div>
         </div>
 
+        <!-- Statistics Cards -->
         <% if (!teacherName) { %>
-            <!-- Admin Navigation Links -->
-            <div class="admin-nav">
-                <a href="/admin/students">Maamulka Ardayda</a>
-                <a href="/admin/teachers">Maamulka Macallimiinta</a>
-                <a href="/admin/classes">Maamulka Fasalada</a>
-                <a href="/admin/subjects">Maamulka Maadooyinka</a>
-                <a href="/admin/timetable">Jadwalka</a>
-                <a href="/admin/fees">Lacagaha</a>
-                <a href="/admin/attendance">Xadirinta</a>
-            </div>
-
-            <!-- Stats Overview for Admin -->
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <h3>Wadarta Ardayda</h3>
-                    <p><%= studentsCount %></p>
-                </div>
-                <div class="stat-card">
-                    <h3>Wadarta Macallimiinta</h3>
-                    <p><%= teachersCount %></p>
-                </div>
-                <div class="stat-card">
-                    <h3>Wadarta Fasalada</h3>
-                    <p><%= classesCount %></p>
-                </div>
-                <div class="stat-card">
-                    <h3>Wadarta Lacagaha</h3>
-                    <p><%= feesCount %></p>
+        <div class="row g-3 mb-4">
+            <div class="col-md-3">
+                <div class="card bg-primary text-white shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">Ardayda</h5>
+                        <h3><%= studentsCount %></h3>
+                        <a href="/admin/students" class="text-white text-decoration-none small">Faahfaahin <i class="fas fa-arrow-right"></i></a>
+                    </div>
                 </div>
             </div>
-
-            <!-- Timetable Section (Admin Only) -->
-            <div class="section-box">
-                <h2>Jadwalka Casharradaada</h2>
-                <% if (timetables && timetables.length > 0) { %>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Maalinta</th>
-                                <th>Waqtiga</th>
-                                <th>Maadada</th>
-                                <th>Fasalka</th>
-                                <th>Macallinka</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <% timetables.forEach(t => { %>
-                                <tr>
-                                    <td><%= t.day %></td>
-                                    <td><%= t.time %></td>
-                                    <td><%= t.subject %></td>
-                                    <td><%= t.classRoom %></td>
-                                    <td><%= t.teacher %></td>
-                                </tr>
-                            <% }) %>
-                        </tbody>
-                    </table>
-                <% } else { %>
-                    <p style="color: #64748b; font-style: italic;">Wali laguma darin jadwal ku saabsan.</p>
-                <% } %>
+            <div class="col-md-3">
+                <div class="card bg-success text-white shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">Macallimiinta</h5>
+                        <h3><%= teachersCount %></h3>
+                        <a href="/admin/teachers" class="text-white text-decoration-none small">Faahfaahin <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
             </div>
+            <div class="col-md-3">
+                <div class="card bg-warning text-dark shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">Fasalada</h5>
+                        <h3><%= classesCount %></h3>
+                        <a href="/admin/classes" class="text-dark text-decoration-none small">Faahfaahin <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-info text-white shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">Lacagaha la bixiyay</h5>
+                        <h3><%= feesCount %></h3>
+                        <a href="/admin/fees" class="text-white text-decoration-none small">Faahfaahin <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
         <% } %>
 
-        <!-- Attendance Section (Visible to Both, but optimized for Teacher's marking) -->
-        <div class="section-box">
-            <h2>Xadirinta Ardayda</h2>
-            
-            <% if (teacherName) { %>
-                <!-- Form for Teacher to mark attendance -->
-                <div class="attendance-form">
-                    <h3 style="margin-top: 0; font-size: 16px; color: #1e293b;">Calaamadee Xadirinta Ardayga</h3>
-                    <form action="/admin/attendance/mark" method="POST">
-                        <input type="hidden" name="teacherName" value="<%= teacherName %>">
-                        <div class="form-group">
-                            <label>Ardayga:</label>
-                            <select name="studentName" required>
-                                <% students.forEach(st => { %>
-                                    <option value="<%= st.name %>"><%= st.name %> (<%= st.classRoom %>)</option>
+        <!-- Quick Attendance Marking Form for Teachers -->
+        <% if (teacherName) { %>
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-secondary text-white">
+                <h5 class="mb-0"><i class="fas fa-check-circle"></i> Saxeex Xadirinta Ardayda</h5>
+            </div>
+            <div class="card-body">
+                <form action="/admin/attendance/mark" method="POST">
+                    <input type="hidden" name="teacherName" value="<%= teacherName %>">
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label class="form-label">Ardayga</label>
+                            <select name="studentName" class="form-select" required>
+                                <option value="">Dooro Ardayga</option>
+                                <% students.forEach(s => { %>
+                                    <option value="<%= s.name %>"><%= s.name %> (<%= s.classRoom %>)</option>
                                 <% }) %>
                             </select>
                         </div>
-                        <div class="form-group">
-                            <label>Fasalka / Maadada:</label>
-                            <select name="classRoom" required>
-                                <% classes.forEach(c => { %>
-                                    <option value="<%= c.className %>"><%= c.className %></option>
+                        <div class="col-md-4">
+                            <label class="form-label">Fasalka / Maadada</label>
+                            <select name="classRoom" class="form-select" required>
+                                <option value="">Dooro Maadada/Fasalka</option>
+                                <% subjects.forEach(sub => { %>
+                                    <option value="<%= sub.name %>"><%= sub.name %> (<%= sub.classRoom %>)</option>
                                 <% }) %>
                             </select>
                         </div>
-                        <div class="form-group">
-                            <label>Xaaladda (Status):</label>
-                            <select name="status" required>
-                                <option value="Xadir (Present)">Xadir (Present)</option>
-                                <option value="Maqane (Absent)">Maqane (Absent)</option>
-                                <option value="Daahay (Late)">Daahay (Late)</option>
+                        <div class="col-md-3">
+                            <label class="form-label">Xaaladda</label>
+                            <select name="status" class="form-select" required>
+                                <option value="Present">Xadir (Present)</option>
+                                <option value="Absent">Maqane (Absent)</option>
+                                <option value="Late">Daahay (Late)</option>
                             </select>
                         </div>
-                        <button type="submit">Keydi Xadirinta</button>
-                    </form>
-                </div>
-            <% } %>
-
-            <h3 style="margin-top: 25px; font-size: 16px; color: #1e293b;">Liiska Xadirintihii la diiwaangeliyay</h3>
-            <% if (attendances && attendances.length > 0) { %>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Magaca Ardayga</th>
-                            <th>Fasalka / Maadada</th>
-                            <th>Xaaladda</th>
-                            <th>Waqtiga</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <% attendances.forEach(a => { %>
-                            <tr>
-                                <td><%= a.studentName %></td>
-                                <td><%= a.subject %></td>
-                                <td><%= a.status %></td>
-                                <td><%= a.time %></td>
-                            </tr>
-                        <% }) %>
-                    </tbody>
-                </table>
-            <% } else { %>
-                <p style="color: #64748b; font-style: italic;">Wali xadirin lama diiwaangelin.</p>
-            <% } %>
+                        <div class="col-md-1 d-flex align-items-end">
+                            <button type="submit" class="btn btn-primary w-100">Diiwaangeli</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
         </div>
+        <% } %>
+
+        <!-- Attendance Section -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-body">
+                <div id="attendance-section" class="d-flex justify-content-between align-items-center mb-3">
+                    <h4 class="mb-0">Xadirinta Ardayda</h4>
+                    <!-- Badhamada Filter-ka oo soo saaraya sanduuqa xadirinta ee muddada la doortay -->
+                    <div>
+                        <a href="/admin/dashboard<%= teacherName ? '?teacherName=' + encodeURIComponent(teacherName) + '&filter=week' : '?filter=week' %>#attendance-section" class="btn btn-outline-primary btn-sm <%= typeof currentFilter !== 'undefined' && currentFilter === 'week' ? 'active' : '' %>">Todobaadkii la soo dhaafay</a>
+                        <a href="/admin/dashboard<%= teacherName ? '?teacherName=' + encodeURIComponent(teacherName) + '&filter=month' : '?filter=month' %>#attendance-section" class="btn btn-outline-success btn-sm <%= typeof currentFilter !== 'undefined' && currentFilter === 'month' ? 'active' : '' %>">Bishii la soo dhaafay</a>
+                        <a href="/admin/dashboard<%= teacherName ? '?teacherName=' + encodeURIComponent(teacherName) : '' %>#attendance-section" class="btn btn-outline-secondary btn-sm <%= typeof currentFilter === 'undefined' || !currentFilter ? 'active' : '' %>">Dhammaan</a>
+                    </div>
+                </div>
+
+                <!-- Sanduuqa Xadirinta (Attendance Box) -->
+                <div class="p-3 border rounded bg-white shadow-sm">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Magaca Ardayga</th>
+                                    <th>Fasalka / Maadada</th>
+                                    <th>Xaaladda</th>
+                                    <th>Waqtiga / Taariikhda</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% if (attendances.length > 0) { %>
+                                    <% attendances.forEach(a => { %>
+                                        <tr>
+                                            <td><%= a.studentName %></td>
+                                            <td><%= a.subject %></td>
+                                            <td>
+                                                <% if (a.status === 'Present' || a.status === 'Xadir (Present)') { %>
+                                                    <span class="badge bg-success">Xadir (Present)</span>
+                                                <% } else if (a.status === 'Absent' || a.status === 'Maqane (Absent)') { %>
+                                                    <span class="badge bg-danger">Maqane (Absent)</span>
+                                                <% } else if (a.status === 'Late' || a.status === 'Daahay (Late)') { %>
+                                                    <span class="badge bg-warning text-dark">Daahay (Late)</span>
+                                                <% } else { %>
+                                                    <span class="badge bg-secondary"><%= a.status %></span>
+                                                <% } %>
+                                            </td>
+                                            <td><%= a.time || (a.date ? new Date(a.date).toLocaleString() : '') %></td>
+                                        </tr>
+                                    <% }) %>
+                                <% } else { %>
+                                    <tr>
+                                        <td colspan="4" class="text-center text-muted">Xogta xadirinta lama helin muddadan sanduuqa ku jirta.</td>
+                                    </tr>
+                                <% } %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
